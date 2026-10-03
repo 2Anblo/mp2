@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
+import styles from './App.module.css'
 
 type Pokemon = {
   id: number
@@ -57,12 +58,12 @@ function PokemonDetail() {
   }, [id])
 
   if (loading) {
-    return <p>Loading...</p>
+    return <p className={styles.status} role="status">Loading Pokémon…</p>
   }
 
   if (error) {
     return (
-      <main>
+      <main className={`${styles.page} ${styles.detail}`}>
         <p role="alert">{error}</p>
         <Link to="/">Back to list</Link>
       </main>
@@ -70,7 +71,7 @@ function PokemonDetail() {
   }
 
   if (!pokemon) {
-    return <p>No Pokemon found</p>
+    return <p className={styles.status}>No Pokémon found</p>
   }
 
     const totalPokemon = 20
@@ -82,7 +83,7 @@ function PokemonDetail() {
     pokemon.id === totalPokemon ? 1 : pokemon.id + 1
 
   return (
-    <main>
+    <main className={`${styles.page} ${styles.detail}`}>
       <Link to="/">Back to list</Link>
 
       <h1>
@@ -102,13 +103,13 @@ function PokemonDetail() {
       <p>Weight: {pokemon.weight / 10} kg</p>
 
       <h2>Types</h2>
-      <ul>
+      <ul className={styles.types}>
         {pokemon.types.map((entry) => (
           <li key={entry.type.name}>{entry.type.name}</li>
         ))}
       </ul>
 
-      <nav aria-label="Pokémon navigation">
+      <nav className={styles.detailNavigation} aria-label="Pokémon navigation">
             <Link to={`/pokemon/${previousId}`}>
                 ← Previous
             </Link>

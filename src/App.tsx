@@ -1,17 +1,19 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import PokemonList from './PokemonList'
 import PokemonDetail from './PokemonDetail'
 import PokemonGallery from './PokemonGallery'
-import './App.css'
+import styles from './App.module.css'
 
 function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <nav aria-label="Main navigation">
-        <Link to="/">List</Link>
-        {' | '}
-        <Link to="/gallery">Gallery</Link>
+      <header className={styles.header}>
+      <div className={styles.brand}>Pokedex <span>FIELD GUIDE / 001–020</span></div>
+      <nav className={styles.navigation} aria-label="Main navigation">
+        <NavLink to="/" end>List</NavLink>
+        <NavLink to="/gallery">Gallery</NavLink>
       </nav>
+      </header>
 
       <Routes>
         <Route path="/" element={<PokemonList />} />

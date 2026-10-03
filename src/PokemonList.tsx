@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import './App.css'
+import styles from './App.module.css'
 import { Link } from 'react-router-dom'
 
 
@@ -55,11 +55,11 @@ function PokenmonList() {
   }, [])
 
   if (loading) {
-    return <p>loading...</p>
+    return <p className={styles.status} role="status">Loading Pokémon…</p>
   }
 
   if (error) {
-    return <p role='alert'>{error}</p>
+    return <p className={styles.status} role='alert'>{error}</p>
   }
 
   const filteredPokemons = pokemons.filter((pokemon) => 
@@ -76,18 +76,24 @@ function PokenmonList() {
   })
 
   return (
-    <main>
-      <h1>My pokemons</h1>
+    <main className={styles.page}>
+      <p className={styles.eyebrow}>EXPLORE THE ORIGINALS</p>
+      <h1>My Pokémon</h1>
+      <p className={styles.intro}>Find a familiar favorite or discover your next companion.</p>
+      <div className={styles.controls}>
+      <div className={styles.searchField}>
       
-      <label htmlFor="pokemon-search">search for pokemon:</label>
+      <label htmlFor="pokemon-search">Search Pokémon</label>
       <input
         id="pokemon-search"
         type="search"
-        placeholder="enter pokemon's name"
+        placeholder="Try bulbasaur…"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
       />
 
+      </div>
+      <div className={styles.field}>
       <label htmlFor="sort-by">Sort by:</label>
       <select
         id="sort-by"
@@ -98,6 +104,8 @@ function PokenmonList() {
         <option value="name">Name</option>
       </select>
 
+      </div>
+      <div className={styles.field}>
       <label htmlFor="sort-order">Order:</label>
       <select
         id="sort-order"
@@ -108,19 +116,23 @@ function PokenmonList() {
         <option value="desc">Descending</option>
       </select>
 
-      <p>found {filteredPokemons.length} pokemon</p>
+      </div>
+      </div>
+      <p className={styles.resultCount} aria-live="polite">{filteredPokemons.length} Pokémon found</p>
       
-      <ul>
+      <ul className={styles.list}>
         {sortedPokemons.map((pokemon) => (
           <li key={pokemon.url}>
             <Link to={`/pokemon/${getPokemonId(pokemon.url)}`}>
-              #{getPokemonId(pokemon.url)} {pokemon.name}
+              <span className={styles.number}>#{String(getPokemonId(pokemon.url)).padStart(3, '0')}</span>
+              <span>{pokemon.name}</span>
+              <span className={styles.arrow} aria-hidden="true">↗</span>
             </Link>
           </li>
         ))}
       </ul>
 
-      {filteredPokemons.length === 0 && <p>no matched pokemon</p>}
+      {filteredPokemons.length === 0 && <p className={styles.status}>No matching Pokémon. Try another name.</p>}
 
     </main>
   )

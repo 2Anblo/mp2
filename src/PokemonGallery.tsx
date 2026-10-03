@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import styles from './App.module.css'
 
 type PokemonListResponse = {
   results: {
@@ -79,16 +80,19 @@ function PokemonGallery() {
   )
 
   if (loading) {
-    return <p>Loading...</p>
+    return <p className={styles.status} role="status">Loading gallery…</p>
   }
 
   if (error) {
-    return <p role="alert">{error}</p>
+    return <p className={styles.status} role="alert">{error}</p>
   }
 
   return (
-    <main>
+    <main className={styles.page}>
+      <p className={styles.eyebrow}>A CLOSER LOOK</p>
       <h1>Pokémon Gallery</h1>
+      <p className={styles.intro}>Meet the collection. Filter by type to find your favorites.</p>
+      <div className={styles.filter}>
 
       <label htmlFor="type-filter">Type: </label>
       <select
@@ -105,15 +109,17 @@ function PokemonGallery() {
         ))}
       </select>
 
-      <p>Found {filteredPokemons.length} Pokémon</p>
+      </div>
+      <p className={styles.resultCount} aria-live="polite">{filteredPokemons.length} Pokémon found</p>
 
-      <div className="pokemon-gallery">
+      <div className={styles.gallery}>
         {filteredPokemons.map((pokemon) => (
           <Link
             key={pokemon.id}
             to={`/pokemon/${pokemon.id}`}
-            className="pokemon-card"
+            className={styles.card}
           >
+            <span className={styles.number}>#{String(pokemon.id).padStart(3, '0')}</span>
             {pokemon.sprites.front_default && (
               <img
                 src={pokemon.sprites.front_default}
