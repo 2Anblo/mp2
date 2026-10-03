@@ -2,21 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
 import styles from './App.module.css'
+import type { Pokemon } from './types/pokemon'
 
-type Pokemon = {
-  id: number
-  name: string
-  height: number
-  weight: number
-  sprites: {
-    front_default: string | null
-  }
-  types: {
-    type: {
-      name: string
-    }
-  }[]
-}
+
 
 function PokemonDetail() {
   const { id } = useParams()

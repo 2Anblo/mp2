@@ -2,23 +2,17 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import styles from './App.module.css'
 import { Link } from 'react-router-dom'
+import type { PokemonListItem, PokemonListResponse } from './types/pokemon'
 
 
-type PokenmonListItem = {
-  name: string
-  url: string
-}
 
-type PokenmonListResponse = {
-  results: PokenmonListItem[]
-}
 
 function getPokemonId(url: string): number {
   return Number(url.split('/').filter(Boolean).pop())
 }
 
 function PokenmonList() {
-  const [pokemons, setPokemons] = useState<PokenmonListItem[]>([])
+  const [pokemons, setPokemons] = useState<PokemonListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
@@ -30,7 +24,7 @@ function PokenmonList() {
 
     async function loadPokemon() {
       try {
-        const response = await axios.get<PokenmonListResponse>(
+        const response = await axios.get<PokemonListResponse>(
           'https://pokeapi.co/api/v2/pokemon?limit=20',
           { signal: controller.signal },
         )

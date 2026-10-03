@@ -2,26 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import styles from './App.module.css'
+import type { PokemonListResponse, Pokemon } from './types/pokemon'
 
-type PokemonListResponse = {
-  results: {
-    name: string
-    url: string
-  }[]
-}
 
-type Pokemon = {
-  id: number
-  name: string
-  sprites: {
-    front_default: string | null
-  }
-  types: {
-    type: {
-      name: string
-    }
-  }[]
-}
 
 function PokemonGallery() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([])
