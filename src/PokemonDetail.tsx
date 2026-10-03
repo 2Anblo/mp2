@@ -1,12 +1,104 @@
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import axios from 'axios'
+
+type Pokemon = {
+  id: number
+  name: string
+  height: number
+  weight: number
+  sprites: {
+    front_default: string | null
+  }
+  types: {
+    type: {
+      name: string
+    }
+  }[]
+}
 
 function PokemonDetail() {
   const { id } = useParams()
 
+  const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadPokemon() {
+      setLoading(true)
+      setError('')
+      setPokemon(null)
+
+      try {
+        const response = await axios.get<Pokemon>(
+          `https://pokeapi.co/api/v2/pokemon/${id}`,
+          { signal: controller.signal },
+        )
+
+        setPokemon(response.data)
+      } catch (err) {
+        if (!controller.signal.aborted) {
+          setError('Failed to load Pokémon')
+          console.error(err)
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    loadPokemon()
+
+    return () => controller.abort()
+  }, [id])
+
+  if (loading) {
+    return <p>Loading...</p>
+  }
+
+  if (error) {
+    return (
+      <main>
+        <p role="alert">{error}</p>
+        <Link to="/">Back to list</Link>
+      </main>
+    )
+  }
+
+  if (!pokemon) {
+    return <p>No Pokémon found</p>
+  }
+
   return (
     <main>
-      <h1>Pokemon #{id}</h1>
       <Link to="/">Back to list</Link>
+
+      <h1>
+        #{pokemon.id} {pokemon.name}
+      </h1>
+
+      {pokemon.sprites.front_default && (
+        <img
+          src={pokemon.sprites.front_default}
+          alt={pokemon.name}
+          width={200}
+          height={200}
+        />
+      )}
+
+      <p>Height: {pokemon.height / 10} m</p>
+      <p>Weight: {pokemon.weight / 10} kg</p>
+
+      <h2>Types</h2>
+      <ul>
+        {pokemon.types.map((entry) => (
+          <li key={entry.type.name}>{entry.type.name}</li>
+        ))}
+      </ul>
     </main>
   )
 }
