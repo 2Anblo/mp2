@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
 
-type Pokemon = {
-  id: number
-  name: string
-  sprites: {
-    front_default: string | null
-  }
-}
 
 type PokenmonListItem = {
   name: string
