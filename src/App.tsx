@@ -10,9 +10,18 @@ type Pokemon = {
   }
 }
 
+type PokenmonListItem = {
+  name: string
+  url: string
+}
+
+type PokenmonListResponse = {
+  results: PokenmonListItem[]
+}
+
 
 function App() {
-  const [pokemon, setPokemon] = useState<Pokemon | null>(null)
+  const [pokemons, setPokemons] = useState<PokenmonListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -22,11 +31,11 @@ function App() {
     async function loadPokemon() {
       try {
         const response = await axios.get<Pokemon>(
-          'https://pokeapi.co/api/v2/pokemon/pikachu',
+          'https://pokeapi.co/api/v2/pokemon?limit=20',
           { signal: controller.signal },
         )
 
-        setPokemon(response.data)
+        setPokemons(response.data.results)
       } catch(err) {
         if(!controller.signal.aborted) {
           setError('Loading error, refresh and try again')
@@ -53,25 +62,18 @@ function App() {
     return <p role='alert'>{error}</p>
   }
 
-  if (!pokemon){
-    return <p>Pokenmon not found!</p>
-  }
 
   return (
     <main>
       <h1>My pokemons</h1>
-      <h2>
-        #{pokemon.id} {pokemon.name}
-      </h2>
-
-      {pokemon.sprites.front_default && (
-        <img
-          src={pokemon.sprites.front_default}
-          alt={pokemon.name}
-          width={200}
-          height={200}
-        />
-      )}
+      
+      <ul>
+        {pokemons.map((pokemon) => (
+          <li key={pokemon.url}>
+            {pokemon.name}
+          </li>
+        ))}
+      </ul>
     </main>
   )
 }
