@@ -70,8 +70,16 @@ function PokemonDetail() {
   }
 
   if (!pokemon) {
-    return <p>No Pokémon found</p>
+    return <p>No Pokemon found</p>
   }
+
+    const totalPokemon = 20
+
+    const previousId =
+    pokemon.id === 1 ? totalPokemon : pokemon.id - 1
+
+    const nextId =
+    pokemon.id === totalPokemon ? 1 : pokemon.id + 1
 
   return (
     <main>
@@ -99,6 +107,18 @@ function PokemonDetail() {
           <li key={entry.type.name}>{entry.type.name}</li>
         ))}
       </ul>
+
+      <nav aria-label="Pokémon navigation">
+            <Link to={`/pokemon/${previousId}`}>
+                ← Previous
+            </Link>
+
+            {' | '}
+
+            <Link to={`/pokemon/${nextId}`}>
+                Next →
+            </Link>
+        </nav>
     </main>
   )
 }
