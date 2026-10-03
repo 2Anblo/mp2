@@ -24,13 +24,14 @@ function App() {
   const [pokemons, setPokemons] = useState<PokenmonListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     const controller = new AbortController()
 
     async function loadPokemon() {
       try {
-        const response = await axios.get<Pokemon>(
+        const response = await axios.get<PokenmonListResponse>(
           'https://pokeapi.co/api/v2/pokemon?limit=20',
           { signal: controller.signal },
         )
@@ -62,18 +63,35 @@ function App() {
     return <p role='alert'>{error}</p>
   }
 
+  const filteredPokemons = pokemons.filter((pokemon) => 
+    pokemon.name.toLowerCase().includes(search.trim().toLocaleLowerCase()),
+  )
 
   return (
     <main>
       <h1>My pokemons</h1>
       
+      <label htmlFor="pokemon-search">search for pokemon:</label>
+      <input
+        id="pokemon-search"
+        type="search"
+        placeholder="enter pokemon's name"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+      />
+
+      <p>found {filteredPokemons.length} pokemon</p>
+      
       <ul>
-        {pokemons.map((pokemon) => (
+        {filteredPokemons.map((pokemon) => (
           <li key={pokemon.url}>
             {pokemon.name}
           </li>
         ))}
       </ul>
+
+      {filteredPokemons.length === 0 && <p>no matched pokemon</p>}
+
     </main>
   )
 }
